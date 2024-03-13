@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 5px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: lightgray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      cursor: pointer;
+    }
+
+    .mark {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  }
+    .restart-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<div class="board">
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+  <div class="cell" onclick="placeMark(this)"><img class="mark"></div>
+</div>
+<button class="restart-button" onclick="restartGame()">Перезапустить игру</button>
+  <script>
+    let currentPlayer = 'X';
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+    const winningCombos = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+      [0, 4, 8], [2, 4, 6] 
+    ];
+    function checkForWinner() {
+  for (let combo of winningCombos) {
+    if (gameBoard[combo[0]] !== '' && gameBoard[combo[0]] === gameBoard[combo[1]] && gameBoard[combo[1]] === gameBoard[combo[2]]) {
+      if (gameBoard[combo[0]] === 'X') {
+        alert('Нинка победила!');
+      } else {
+        alert('Галина победила!');
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function placeMark(cell) {
+  const index = Array.from(cell.parentNode.children).indexOf(cell);
+  if (gameBoard[index] === '' && !checkForWinner()) {
+    const markImg = cell.querySelector('.mark');
+    markImg.src = currentPlayer === 'X' ? 'krest.png' : 'nolic.png';
+    gameBoard[index] = currentPlayer;
+    if (checkForWinner()) {
+    } else if (gameBoard.every(cell => cell !== '')) {
+      alert('Ничья!');
+    } else {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+  }
+}
+
+    function restartGame() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        cell.textContent = '';
+      });
+      gameBoard = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+    }
+  </script>
+</body>
+</html>
